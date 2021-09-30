@@ -39,15 +39,15 @@ export function GetNumberCart() {
   };
 }
 
-export function increaseQuantity(payload) {
+export function increaseQuantity(id) {
   return {
     type: ACTION_TYPE.INCREASE_QUANTITY,
-    payload,
+    payload: id,
   };
 }
-export function decreaseQuantity(payload) {
+export function decreaseQuantity(id) {
   return {
     type: ACTION_TYPE.DECREASE_QUANTITY,
-    payload,
+    payload: id,
   };
 }

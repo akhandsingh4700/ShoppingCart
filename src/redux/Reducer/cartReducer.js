@@ -48,22 +48,38 @@ export const productReducer = (state = initialState, { type, payload }) => {
 
     case ActionType.INCREASE_QUANTITY:
       state.numberCart++;
-      state.cart[payload].qty++;
+      // state.cart[payload].qty++;
 
       return {
         ...state,
+        cart: state.cart.map((curElem) =>
+          curElem.id === payload
+            ? {
+                ...curElem,
+                qty: curElem.qty + 1,
+              }
+            : curElem
+        ),
       };
 
     case ActionType.DECREASE_QUANTITY:
-      let quantity = state.cart[payload].qty;
+      // let quantity = state.cart[payload].qty;
 
-      if (quantity > 1) {
-        state.numberCart--;
-        state.cart[payload].qty--;
-      }
+      // if (quantity > 1) {
+      //   state.numberCart--;
+      //   state.cart[payload].qty--;
+      // }
 
       return {
         ...state,
+        cart: state.cart.map((curElem) =>
+          curElem.id === payload
+            ? {
+                ...curElem,
+                qty: curElem.qty > 1 ? curElem.qty - 1 : curElem.qty,
+              }
+            : curElem
+        ),
       };
 
     default:

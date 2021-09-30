@@ -5,27 +5,21 @@ import Box from "@mui/material/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    backgroundColor: "#14e4d1",
+    backgroundColor: "white",
     width: "50%",
     marginTop: "10px",
     height: "300px",
+    boxShadow: "0px 2px 2px grey",
 
     borderRadius: "5px",
-    "& .MuiButton-contained": {
-      color: "white",
-      backgroundColor: "red",
-      boxShadow: "none",
-    },
-    "& .MuiButton-contained:hover": {
-      backgroundColor: "red",
-      boxShadow: "none",
-    },
+
     "& .MuiTypography-h5": {
       fontSize: "20px",
     },
@@ -35,17 +29,11 @@ const useStyles = makeStyles((theme) => ({
     width: "40%",
     height: "100%",
   },
-  // remove: {
-  //   position: "relative",
-  //   top: "50px",
-  //   left: "-124px",
-  // },
+
   cartItems: {
     marginLeft: "50px",
   },
-  qty: {
-    backgroundColor: "red",
-  },
+
   productDesc: {
     width: "60%",
     padding: "20px",
@@ -54,21 +42,50 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     gap: "20px",
     alignItems: "center",
+    flexWrap: "Wrap",
+  },
+  remove: {
+    marginTop: "50px !important",
   },
 }));
-const Cart = () => {
-  const dispatch = useDispatch();
-  const items = useSelector((state) => state.allProducts);
-  let ListCart = [];
-  let TotalCart = 0;
-  Object.keys(items.cart).forEach(function (item) {
-    TotalCart += items.cart[item].qty * items.cart[item].originalPrice;
-    ListCart.push(items.cart[item]);
-  });
 
-  function TotalPrice(price, qty) {
-    return Number(price * qty);
-  }
+const BootstrapButton = styled(Button)({
+  boxShadow: "none",
+  textTransform: "none",
+  fontSize: 16,
+  padding: "6px 12px",
+  border: "1px solid",
+  lineHeight: 1.5,
+  backgroundColor: "#0063cc",
+  borderColor: "#0063cc",
+  fontFamily: [
+    "-apple-system",
+    "BlinkMacSystemFont",
+    '"Segoe UI"',
+    "Roboto",
+    '"Helvetica Neue"',
+    "Arial",
+    "sans-serif",
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(","),
+  "&:hover": {
+    backgroundColor: "#0069d9",
+    borderColor: "#0062cc",
+    boxShadow: "none",
+  },
+  "&:active": {
+    boxShadow: "none",
+    backgroundColor: "#0062cc",
+    borderColor: "#005cbf",
+  },
+  "&:focus": {
+    boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+  },
+});
+const Cart = ({ item }) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   return (
@@ -138,43 +155,44 @@ const Cart = () => {
         </div>
       </div> */}
       <Box className={classes.cartItems}>
-        {ListCart.map((item, key) => (
-          <Box className={classes.root} key={key}>
-            <Box className={classes.productImage}>
-              <img src={item.image} style={{ width: "100%", height: "100%" }} />
-            </Box>
-            <Box className={classes.productDesc}>
-              <Typography variant="h5">{item.title}</Typography>
-              <Typography variant="h6">Price : {item.price} Rs.</Typography>
-              <Box className={classes.productQty}>
-                Quantity:
-                <Button
-                  onClick={() => dispatch(Actions.decreaseQuantity(key))}
-                  className={classes.qty}
-                >
-                  <p>-</p>
-                </Button>
-                <span>{item.qty}</span>
-                <Button
-                  color="primary"
-                  onClick={() => dispatch(Actions.increaseQuantity(key))}
-                  className={classes.qty}
-                >
-                  +
-                </Button>
-              </Box>
-
-              <Button
-                variant="contained"
-                startIcon={<DeleteIcon />}
-                onClick={() => dispatch(Actions.removeFromCart(item.id))}
-                className={classes.remove}
-              >
-                Remove
-              </Button>
-            </Box>
+        <Box className={classes.root}>
+          <Box className={classes.productImage}>
+            <img src={item.image} style={{ width: "90%", height: "90%" }} />
           </Box>
-        ))}
+          <Box className={classes.productDesc}>
+            <Typography variant="h5">{item.title}</Typography>
+            <Typography variant="h6">Price : {item.price} Rs.</Typography>
+            <Box className={classes.productQty}>
+              Quantity:
+              <BootstrapButton
+                variant="contained"
+                disableRipple
+                onClick={() => dispatch(Actions.decreaseQuantity(item.id))}
+                className={classes.qty}
+              >
+                -
+              </BootstrapButton>
+              <span>{item.qty}</span>
+              <BootstrapButton
+                variant="contained"
+                disableRipple
+                onClick={() => dispatch(Actions.increaseQuantity(item.id))}
+                className={classes.qty}
+              >
+                +
+              </BootstrapButton>
+            </Box>
+
+            <Button
+              variant="contained"
+              startIcon={<DeleteIcon />}
+              onClick={() => dispatch(Actions.removeFromCart(item.id))}
+              className={classes.remove}
+            >
+              Remove
+            </Button>
+          </Box>
+        </Box>
       </Box>
     </>
   );
